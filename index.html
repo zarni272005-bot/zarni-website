@@ -36,7 +36,7 @@
                         </button>
                 </div>
                 <p class="auth-message" id="auth-message" aria-live="polite">Social sign-in requires setup.</p>
-                <p>Don't have an account? <a href="#" data-show-form="register">Register</a></p>
+                <p>Don't have an account? <a href="#register" data-show-form="register">Register</a></p>
             </div>
 
             <div class="form-box register-box" id="register-form" hidden>
@@ -73,7 +73,7 @@
                     </button>
                 </div>
                 <p class="auth-message" aria-live="polite">Social sign-in requires OAuth setup.</p>
-                <p>Already have an account? <a href="#" data-show-form="login">Login</a></p>
+                <p>Already have an account? <a href="#login" data-show-form="login">Login</a></p>
             </div>
         </main>
         <script>
@@ -104,14 +104,28 @@
                 });
             });
 
+            function showForm(formName) {
+                const showRegister = formName === "register";
+                document.getElementById("login-form").hidden = showRegister;
+                document.getElementById("register-form").hidden = !showRegister;
+            }
+
             document.querySelectorAll("[data-show-form]").forEach((link) => {
                 link.addEventListener("click", (event) => {
                     event.preventDefault();
-                    const showRegister = link.dataset.showForm === "register";
-                    document.getElementById("login-form").hidden = showRegister;
-                    document.getElementById("register-form").hidden = !showRegister;
+                    const formName = link.dataset.showForm;
+                    showForm(formName);
+                    window.location.hash = formName;
                 });
             });
+
+            window.addEventListener("hashchange", () => {
+                showForm(window.location.hash === "#register" ? "register" : "login");
+            });
+
+            if (window.location.hash === "#register") {
+                showForm("register");
+            }
         </script>
     </body>
 </html>
