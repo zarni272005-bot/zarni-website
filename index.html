@@ -5,22 +5,34 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Full-stack Login  & Registration</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="static/style.css">
     </head>
     <body>
         <main class="container">
             <div class="form-box" id="login-form">
                 <h2>Login</h2>
-                <form>
+                <form data-auth-form="login">
                     <div class="login-method-toggle" role="group" aria-label="Choose sign-in method">
                         <button class="method-button active" type="button" data-identifier-method="email" aria-pressed="true">Email</button>
                         <button class="method-button" type="button" data-identifier-method="phone" aria-pressed="false">Phone</button>
                     </div>
-                    <input id="login-identifier" data-identifier type="email" name="identifier" placeholder="Email address" aria-label="Email address" autocomplete="email" required>
-                    <input type="password" placeholder="Password" aria-label="Password" required>
+                    <input id="login-identifier" data-identifier type="email" name="identifier" placeholder="Email address" aria-label="Email address" autocomplete="email" inputmode="email" maxlength="254" aria-describedby="login-identifier-error" required>
+                    <p class="field-error" id="login-identifier-error" role="alert" hidden></p>
+                    <div class="password-field">
+                        <input id="login-password" type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="current-password" maxlength="128" aria-describedby="login-password-error" required>
+                        <button class="password-toggle" type="button" data-password-toggle aria-controls="login-password" aria-pressed="false">Show</button>
+                    </div>
+                    <p class="field-error" id="login-password-error" role="alert" hidden></p>
+                    <p class="caps-lock-hint" hidden>Caps Lock is on.</p>
                     <button type="submit">Login</button>
                 </form>
-                <div class="divider" aria-hidden="true"><span>or continue with</span></div>
+                <div class="divider">
+                    <span>or continue with</span>
+                    <details class="signin-help">
+                        <summary aria-label="About social sign-in">?</summary>
+                        <p>These buttons are for using a TikTok, Facebook, or GitHub account. Social sign-in is not connected yet, so use Email or Phone to sign in with an account you registered here.</p>
+                    </details>
+                </div>
                 <div class="social-login" aria-label="Other sign-in methods">
                         <button class="social-button" type="button" data-provider="TikTok" aria-label="Continue with TikTok">
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 7.1a7.1 7.1 0 0 1-4.3-1.5v9.1a6.1 6.1 0 1 1-5.3-6V12a2.8 2.8 0 1 0 2 2.7V2h3.3c.2 2.1 1.8 3.8 4.3 4.1z"/></svg>
@@ -35,29 +47,47 @@
                             <span>GitHub</span>
                         </button>
                 </div>
-                <p class="auth-message" id="auth-message" aria-live="polite">Social sign-in requires setup.</p>
+                <p class="auth-message" id="login-message" role="status" aria-live="polite">Social sign-in requires OAuth setup.</p>
                 <p>Don't have an account? <a href="#register" data-show-form="register">Register</a></p>
             </div>
 
             <div class="form-box register-box" id="register-form" hidden>
                 <h2>Create Account</h2>
                 <p class="register-intro">Join us by creating your account</p>
-                <form>
-                    <input type="text" name="name" placeholder="Full Name" aria-label="Full Name" required>
+                <form data-auth-form="register">
+                    <input id="register-name" type="text" name="name" placeholder="Full Name" aria-label="Full Name" autocomplete="name" minlength="2" maxlength="80" aria-describedby="register-name-error" required>
+                    <p class="field-error" id="register-name-error" role="alert" hidden></p>
                     <div class="login-method-toggle" role="group" aria-label="Choose registration contact method">
                         <button class="method-button active" type="button" data-identifier-method="email" aria-pressed="true">Email</button>
                         <button class="method-button" type="button" data-identifier-method="phone" aria-pressed="false">Phone</button>
                     </div>
-                    <input id="register-identifier" data-identifier type="email" name="identifier" placeholder="Email address" aria-label="Email address" autocomplete="email" required>
-                    <input type="password" placeholder="Password" aria-label="Password" required>
-                    <select name="role" aria-label="Role" required>
-                        <option value="">--Select Role--</option>
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                    <button type="submit" name="register">Register</button>
+                    <input id="register-identifier" data-identifier type="email" name="identifier" placeholder="Email address" aria-label="Email address" autocomplete="email" inputmode="email" maxlength="254" aria-describedby="register-identifier-error" required>
+                    <p class="field-error" id="register-identifier-error" role="alert" hidden></p>
+                    <div class="password-field">
+                        <input id="register-password" type="password" name="password" placeholder="Password (at least 10 characters)" aria-label="Password" autocomplete="new-password" minlength="10" maxlength="128" aria-describedby="register-password-error register-strength" required>
+                        <button class="password-toggle" type="button" data-password-toggle aria-controls="register-password" aria-pressed="false">Show</button>
+                    </div>
+                    <p class="field-error" id="register-password-error" role="alert" hidden></p>
+                    <div class="password-strength" id="register-strength" hidden>
+                        <div class="strength-track"><span class="strength-bar" data-strength-bar></span></div>
+                        <p class="strength-label" data-strength-label>Password strength</p>
+                        <ul class="strength-hints">
+                            <li data-rule="length">At least 10 characters</li>
+                            <li data-rule="case">Upper and lowercase letters</li>
+                            <li data-rule="number">A number</li>
+                            <li data-rule="symbol">A symbol</li>
+                        </ul>
+                    </div>
+                    <p class="caps-lock-hint" hidden>Caps Lock is on.</p>
+                    <button type="submit">Create account</button>
                 </form>
-                <div class="divider" aria-hidden="true"><span>or continue with</span></div>
+                <div class="divider">
+                    <span>or continue with</span>
+                    <details class="signin-help">
+                        <summary aria-label="About social sign-in">?</summary>
+                        <p>These buttons are for registering with a TikTok, Facebook, or GitHub account. Social sign-in is not connected yet; use Email or Phone to create an account here.</p>
+                    </details>
+                </div>
                 <div class="social-login" aria-label="Register with another account">
                     <button class="social-button" type="button" data-provider="TikTok" aria-label="Continue with TikTok">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 7.1a7.1 7.1 0 0 1-4.3-1.5v9.1a6.1 6.1 0 1 1-5.3-6V12a2.8 2.8 0 1 0 2 2.7V2h3.3c.2 2.1 1.8 3.8 4.3 4.1z"/></svg>
@@ -72,60 +102,19 @@
                         <span>GitHub</span>
                     </button>
                 </div>
-                <p class="auth-message" aria-live="polite">Social sign-in requires OAuth setup.</p>
+                <p class="auth-message" id="register-message" role="status" aria-live="polite">Social sign-in requires OAuth setup.</p>
                 <p>Already have an account? <a href="#login" data-show-form="login">Login</a></p>
             </div>
+            <section class="form-box account-box" id="account-view" aria-live="polite" hidden>
+                <div class="account-avatar" id="account-avatar" aria-hidden="true"></div>
+                <h2>You're signed in</h2>
+                <p id="account-details"></p>
+                <button type="button" id="logout-button">Log out</button>
+            </section>
         </main>
-        <script>
-            document.querySelectorAll("[data-provider]").forEach((button) => {
-                button.addEventListener("click", () => {
-                    const message = button.closest(".form-box").querySelector(".auth-message");
-                    message.textContent = `${button.dataset.provider} sign-in needs OAuth setup before it can be used.`;
-                });
-            });
-
-            document.querySelectorAll(".login-method-toggle").forEach((toggle) => {
-                const identifier = toggle.parentElement.querySelector("[data-identifier]");
-
-                toggle.querySelectorAll("[data-identifier-method]").forEach((button) => {
-                    button.addEventListener("click", () => {
-                        const usePhone = button.dataset.identifierMethod === "phone";
-                        identifier.type = usePhone ? "tel" : "email";
-                        identifier.placeholder = usePhone ? "Phone number" : "Email address";
-                        identifier.setAttribute("aria-label", usePhone ? "Phone number" : "Email address");
-                        identifier.autocomplete = usePhone ? "tel" : "email";
-
-                        toggle.querySelectorAll("[data-identifier-method]").forEach((methodButton) => {
-                            const isActive = methodButton === button;
-                            methodButton.classList.toggle("active", isActive);
-                            methodButton.setAttribute("aria-pressed", String(isActive));
-                        });
-                    });
-                });
-            });
-
-            function showForm(formName) {
-                const showRegister = formName === "register";
-                document.getElementById("login-form").hidden = showRegister;
-                document.getElementById("register-form").hidden = !showRegister;
-            }
-
-            document.querySelectorAll("[data-show-form]").forEach((link) => {
-                link.addEventListener("click", (event) => {
-                    event.preventDefault();
-                    const formName = link.dataset.showForm;
-                    showForm(formName);
-                    window.location.hash = formName;
-                });
-            });
-
-            window.addEventListener("hashchange", () => {
-                showForm(window.location.hash === "#register" ? "register" : "login");
-            });
-
-            if (window.location.hash === "#register") {
-                showForm("register");
-            }
-        </script>
+        <noscript>
+            <p class="noscript-message">This page needs JavaScript to sign in. Enable it and reload.</p>
+        </noscript>
+        <script src="static/app.js" defer></script>
     </body>
 </html>
